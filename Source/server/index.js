@@ -12,9 +12,6 @@ var io = require("socket.io")(server);
 // middle ware
 app.use(express.json());
 
-const DB =
-  "https://codefirst.iut.uca.fr/containers/fantom_games-database_server";
-
 io.on("connection", (socket) => {
   console.log("connected!");
   socket.on("createRoom", async ({ nickname }) => {
@@ -117,14 +114,6 @@ io.on("connection", (socket) => {
   });
 });
 
-mongoose
-  .connect(DB)
-  .then(() => {
-    console.log("Connection successful!");
-  })
-  .catch((e) => {
-    console.log(e);
-  });
 
 server.listen(port, "0.0.0.0", () => {
   console.log(`Server started and running on port ${port}`);
