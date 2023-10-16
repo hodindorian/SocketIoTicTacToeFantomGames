@@ -1,12 +1,17 @@
 // importing modules
 const express = require("express");
-const https = require("https");
+const http = require("http");
 
 const app = express();
 const port = process.env.PORT || 3000;
-var server = https.createServer(app);
+var server = http.createServer((app, res) => {
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+});
 const Room = require("./models/room");
 var io = require("socket.io")(server);
+
 
 // middle ware
 app.use(express.json());
