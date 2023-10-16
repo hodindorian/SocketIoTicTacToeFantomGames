@@ -15,7 +15,7 @@ steps:
     environment:
       IMAGENAME: mariadb:10.5
       CONTAINERNAME: database_server
-      PRIVATE : true
+      PRIVATE : false
       COMMAND: create
       CODEFIRST_CLIENTDRONE_ENV_MARIADB_ROOT_PASSWORD:
         from_secret: db_root_password
