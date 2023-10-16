@@ -1,8 +1,7 @@
 FROM node:14
 WORKDIR ./server
-COPY ./server .
-RUN ls -l && echo "serevr"
-COPY package.json .
+COPY ./server/package.json .
 RUN npm install
+COPY ./server .
 EXPOSE 3000
 ENTRYPOINT [ "npm", "run" , "dev" ]
