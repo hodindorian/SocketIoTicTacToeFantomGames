@@ -1,0 +1,28 @@
+kind: pipeline
+type: docker
+name: API_Fantom_Games_Connection
+
+
+trigger:
+  event:
+    - push
+
+
+steps:
+  # Server Database
+  - name: database_server
+    image: hub.codefirst.iut.uca.fr/thomas.bellembois/codefirst-dockerproxy-clientdrone:latest
+    environment:
+      IMAGENAME: mariadb:10.5
+      CONTAINERNAME: database_server
+      PRIVATE : true
+      COMMAND: create
+      CODEFIRST_CLIENTDRONE_ENV_MARIADB_ROOT_PASSWORD:
+        from_secret: db_root_password
+      CODEFIRST_CLIENTDRONE_ENV_MARIADB_DATABASE:
+        from_secret: db_database
+      CODEFIRST_CLIENTDRONE_ENV_MARIADB_USER:
+        from_secret: db_user
+      CODEFIRST_CLIENTDRONE_ENV_MARIADB_PASSWORD:
+        from_secret: db_password
+      ADMINS: dorianhodin,corentinrichard,jeremybesson,joanpierron,baptistemarcel
