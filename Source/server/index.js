@@ -1,20 +1,19 @@
 // importing modules
-import express, { json } from "express";
-import { createServer } from "http";
-import { connect } from "mongoose";
-import Room, { findById } from "./models/room";
-
+const express = require("express");
+const http = require("http");
+const mongoose = require("mongoose");
 
 const app = express();
 const port = process.env.PORT || 3000;
-var server = createServer(app);
+var server = http.createServer(app);
+const Room = require("./models/room");
 var io = require("socket.io")(server);
 
 // middle ware
-app.use(json());
+app.use(express.json());
 
 const DB =
-  "mongodb+srv://rivaan:test123@cluster0.rmhtu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "https://codefirst.iut.uca.fr/containers/fantom_games-database_server";
 
 io.on("connection", (socket) => {
   console.log("connected!");
@@ -49,7 +48,7 @@ io.on("connection", (socket) => {
         socket.emit("errorOccurred", "Please enter a valid room ID.");
         return;
       }
-      let room = await findById(roomId);
+      let room = await Room.findById(roomId);
 
       if (room.isJoin) {
         let player = {
@@ -77,7 +76,7 @@ io.on("connection", (socket) => {
 
   socket.on("tap", async ({ index, roomId }) => {
     try {
-      let room = await findById(roomId);
+      let room = await Room.findById(roomId);
 
       let choice = room.turn.playerType; // x or o
       if (room.turnIndex == 0) {
@@ -100,7 +99,7 @@ io.on("connection", (socket) => {
 
   socket.on("winner", async ({ winnerSocketId, roomId }) => {
     try {
-      let room = await findById(roomId);
+      let room = await Room.findById(roomId);
       let player = room.players.find(
         (playerr) => playerr.socketID == winnerSocketId
       );
@@ -118,7 +117,8 @@ io.on("connection", (socket) => {
   });
 });
 
-connect(DB)
+mongoose
+  .connect(DB)
   .then(() => {
     console.log("Connection successful!");
   })
