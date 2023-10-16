@@ -1,10 +1,10 @@
 // importing modules
 const express = require("express");
-const http = require("https");
+const https = require("https");
 
 const app = express();
 const port = process.env.PORT || 3000;
-var server = http.createServer(app);
+var server = https.createServer(app);
 const Room = require("./models/room");
 var io = require("socket.io")(server);
 
