@@ -1,7 +1,6 @@
 // importing modules
 const express = require("express");
 const http = require("http");
-const mongoose = require("mongoose");
 
 const app = express();
 const port = process.env.PORT || 3000;
