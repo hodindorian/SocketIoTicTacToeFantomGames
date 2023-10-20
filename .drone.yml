@@ -13,8 +13,8 @@ steps:
   - name: set_server
     image: plugins/docker
     settings:
-      dockerfile: ./Source/Dockerfile
-      context: Source
+      dockerfile: ./Dockerfile
+      context: ./
       registry: hub.codefirst.iut.uca.fr
       repo: hub.codefirst.iut.uca.fr/dorian.hodin/socketioservergames
       username:

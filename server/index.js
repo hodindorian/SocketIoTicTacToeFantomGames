@@ -4,17 +4,21 @@ const http = require("http");
 
 const app = express();
 const port = process.env.PORT || 3000;
-var server = http.createServer((app, res) => {
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-});
+var server = http.createServer(app);
 const Room = require("./models/room");
-var io = require("socket.io")(server);
+const io = require("socket.io")(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET"],
+    }
+});
+
 
 
 // middle ware
 app.use(express.json());
+
+const rooms = [];
 
 io.on("connection", (socket) => {
   console.log("connected!");
@@ -28,16 +32,14 @@ io.on("connection", (socket) => {
         nickname,
         playerType: "X",
       };
-      room.players.push(player);
-      room.turn = player;
-      room = await room.save();
-      console.log(room);
-      const roomId = room._id.toString();
-
-      socket.join(roomId);
+      room.addPlayer(player);
+      room.nextTurn();
+      console.log(room.id);
+      socket.join(room.id);
       // io -> send data to everyone
       // socket -> sending data to yourself
-      io.to(roomId).emit("createRoomSuccess", room);
+      io.to(room.id).emit("createRoomSuccess", room);
+      rooms.push(room);
     } catch (e) {
       console.log(e);
     }
@@ -45,12 +47,7 @@ io.on("connection", (socket) => {
 
   socket.on("joinRoom", async ({ nickname, roomId }) => {
     try {
-      if (!roomId.match(/^[0-9a-fA-F]{24}$/)) {
-        socket.emit("errorOccurred", "Please enter a valid room ID.");
-        return;
-      }
-      let room = await Room.findById(roomId);
-
+      const room = rooms.find((room) => room.id === roomId.toString());
       if (room.isJoin) {
         let player = {
           nickname,
@@ -58,9 +55,8 @@ io.on("connection", (socket) => {
           playerType: "O",
         };
         socket.join(roomId);
-        room.players.push(player);
+        room.addPlayer(player);
         room.isJoin = false;
-        room = await room.save();
         io.to(roomId).emit("joinRoomSuccess", room);
         io.to(roomId).emit("updatePlayers", room.players);
         io.to(roomId).emit("updateRoom", room);
@@ -77,7 +73,7 @@ io.on("connection", (socket) => {
 
   socket.on("tap", async ({ index, roomId }) => {
     try {
-      let room = await Room.findById(roomId);
+      const room = rooms.find((room) => room.id === roomId);
 
       let choice = room.turn.playerType; // x or o
       if (room.turnIndex == 0) {
@@ -100,7 +96,7 @@ io.on("connection", (socket) => {
 
   socket.on("winner", async ({ winnerSocketId, roomId }) => {
     try {
-      let room = await Room.findById(roomId);
+      const room = rooms.find((room) => room.id === roomId);
       let player = room.players.find(
         (playerr) => playerr.socketID == winnerSocketId
       );
@@ -117,6 +113,7 @@ io.on("connection", (socket) => {
     }
   });
 });
+
 
 
 server.listen(port, "0.0.0.0", () => {
