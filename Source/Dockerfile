@@ -1,5 +1,4 @@
 FROM node:14
-COPY ./server /var/www/html
-WORKDIR /var/www/html
+COPY ./server .
 RUN npm install
 ENTRYPOINT [ "npm", "start" ]
