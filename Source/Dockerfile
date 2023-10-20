@@ -1,7 +1,7 @@
 FROM node:14
 WORKDIR ./server
-COPY ./server/package.json .
+COPY ./server/package.json /var/www/html
 RUN npm install
-COPY ./server .
-EXPOSE 3000
+COPY ./server /var/www/html
+EXPOSE 80
 ENTRYPOINT [ "npm", "run" , "dev" ]
