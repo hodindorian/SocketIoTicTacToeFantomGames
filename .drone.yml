@@ -22,12 +22,8 @@ steps:
     image: node:14
     commands :
       - cd Source/server
-      - npm install
-      - npm start &
-      - sleep 5
-      - res=$(curl -s http://localhost:3000 | grep '<pre>Cannot GET /</pre>')
-      - echo $res
-      - if [ -z "$res" ];then exit 1;fi
+      - npm install; npm start &; sleep 5
+      - if [ -z "$(curl -s http://localhost:3000 | grep '<pre>Cannot GET /</pre>')" ];then exit 1;fi
 
     depends_on: [ build ]
 
