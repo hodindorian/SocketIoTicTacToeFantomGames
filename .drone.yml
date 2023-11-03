@@ -14,7 +14,7 @@ steps:
     image: node:14
     commands:
       - cd Source/server
-      - npm install
+      - npm install -f
       - npm build
 
   # testing server
@@ -22,7 +22,7 @@ steps:
     image: node:14
     commands :
       - cd Source/server
-      - npm install -f
+      - npm install
       - npm start
       - sleep 1 && echo "ok" && curl -I localhost:3000
     depends_on: [ build ]
