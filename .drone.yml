@@ -13,14 +13,18 @@ steps:
   - name: build
     image: node:14
     commands:
+      - cd Source/server
       - npm run build
 
   # testing server
   - name: server-test
     image: node:14
     commands :
+      - cd Source/server
       - npm start
       - sleep 5 && curl -I localhost:3000
+    depends_on: [ build ]
+
   # docker image build
   - name: set_server
     image: plugins/docker
@@ -33,6 +37,8 @@ steps:
         from_secret: SECRET_USERNAME
       password:
         from_secret: SECRET_PASSWD
+    depends_on: [ server-test ]
+
 
   # container deployment
   - name: deploy_api
