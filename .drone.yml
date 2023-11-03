@@ -25,7 +25,7 @@ steps:
       - npm install
       - npm start &
       - sleep 5
-      - res=$(curl -s http://localhost:3001 | grep '<pre>Cannot GET /</pre>')
+      - res=$(curl -s http://localhost:3000 | grep '<pre>Cannot GET /</pre>')
       - echo $res
       - if [ -z "$res" ];then exit 1;fi
 
