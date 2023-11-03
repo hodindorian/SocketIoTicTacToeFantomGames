@@ -27,7 +27,7 @@ steps:
       - sleep 5
       - res=$(curl -s http://localhost:3000 | grep '<pre>Cannot GET /</pre>')
       - echo $res
-      - if (( $res == ""));then exit 1;fi
+      - if [ -z "$res" ];then exit 1;fi
 
     depends_on: [ build ]
 
