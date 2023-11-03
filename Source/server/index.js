@@ -40,10 +40,6 @@ io.on("connection", (socket) => {
       // socket -> sending data to yourself
       io.to(room.id).emit("createRoomSuccess", room);
       rooms.push(room);
-      socket.emit(
-                "roomId",
-                room.id
-              );
     } catch (e) {
       console.log(e);
     }
