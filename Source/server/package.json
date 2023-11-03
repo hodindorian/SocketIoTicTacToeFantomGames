@@ -17,5 +17,10 @@
     "express": "^4.18.0",
     "http": "^0.0.1-security",
     "socket.io": "^4.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://codefirst.iut.uca.fr/git/fantom_games/SocketIOServerGames.git"
   }
+
 }

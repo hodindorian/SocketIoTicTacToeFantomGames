@@ -22,7 +22,7 @@ steps:
     image: node:14
     commands :
       - cd Source/server
-      - npm install
+      - npm install -f
       - npm start
       - sleep 5 && curl -I localhost:3000
     depends_on: [ build ]
