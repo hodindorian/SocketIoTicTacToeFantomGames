@@ -9,6 +9,18 @@ trigger:
 
 
 steps:
+  # building server
+  - name: build
+    image: node:14
+    commands:
+      - npm run build
+
+  # testing server
+  - name: server-test
+    image: node:14
+    commands :
+      - npm start
+      - sleep 5 && curl -I localhost:3000
   # docker image build
   - name: set_server
     image: plugins/docker
