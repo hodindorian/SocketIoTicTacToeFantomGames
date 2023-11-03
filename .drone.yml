@@ -23,8 +23,8 @@ steps:
     commands :
       - cd Source/server
       - npm install
-      - npm start
-      - sleep 1 && echo "ok" && curl -I localhost:3000
+      - npm start &
+      - sleep 1 && curl -I localhost:3000
     depends_on: [ build ]
 
   # docker image build
