@@ -51,5 +51,5 @@ steps:
       CONTAINERNAME: deploy_server
       COMMAND: create
       OVERWRITE: true
-      ADMINS: dorianhodin,corentinrichard,jeremybesson,joanpierron,baptistemarcel
+      ADMINS: dorianhodin,corentinrichard,jeremybesson,joanpierron
     depends_on: [ set_server ]
