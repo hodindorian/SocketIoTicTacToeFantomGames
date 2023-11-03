@@ -24,7 +24,8 @@ steps:
       - cd Source/server
       - npm install
       - npm start &
-      - sleep 1 && curl -I localhost:3000
+      - sleep 5
+      - curl -I localhost:3000
     depends_on: [ build ]
 
   # docker image build
