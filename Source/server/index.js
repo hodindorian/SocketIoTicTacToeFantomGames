@@ -40,6 +40,10 @@ io.on("connection", (socket) => {
       // socket -> sending data to yourself
       io.to(room.id).emit("createRoomSuccess", room);
       rooms.push(room);
+      socket.emit(
+                "roomId",
+                room.id
+              );
     } catch (e) {
       console.log(e);
     }
@@ -63,7 +67,7 @@ io.on("connection", (socket) => {
       } else {
         socket.emit(
           "errorOccurred",
-          "The game is in progress, try again later."
+          "Cette partie est déjà en cours !"
         );
       }
     } catch (e) {
