@@ -26,7 +26,7 @@ steps:
       - npm start &
       - sleep 5
       - curl http://localhost:3001
-      - [[ $? -eq 0 ]]
+      - test $? -eq 0
     depends_on: [ build ]
 
   # docker image build
