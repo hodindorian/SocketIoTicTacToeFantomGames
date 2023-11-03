@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server for TicTacToe Game on Fantom Games",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
