@@ -1,7 +1,7 @@
 const playerSchema = require("./player");
 const uid = function () {
   let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
   let counter = 0;
   while (counter < 8) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -20,7 +20,7 @@ class Room {
     this.currentRound = 1; // Round actuel
     this.players = []; // Liste des joueurs
     this.isJoin = true; // Permet de rejoindre la room
-    this.turn = null; // Joueur actuel
+    this.turn = {}; // Joueur actuel
     this.turnIndex = 0; // Index du joueur actuel
   }
 

@@ -22,6 +22,7 @@ const rooms = [];
 
 io.on("connection", (socket) => {
   console.log("connected!");
+
   socket.on("createRoom", async ({ nickname }) => {
     console.log(nickname);
     try {
@@ -33,8 +34,7 @@ io.on("connection", (socket) => {
         playerType: "X",
       };
       room.addPlayer(player);
-      room.nextTurn();
-      console.log(room.id);
+      room.turn = player;
       socket.join(room.id);
       // io -> send data to everyone
       // socket -> sending data to yourself
@@ -66,16 +66,22 @@ io.on("connection", (socket) => {
           "Cette partie est déjà en cours !"
         );
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      if(error instanceof TypeError) {
+        socket.emit(
+          "errorOccurred",
+          "Code de room introuvable !"
+        );
+      }else{
+        console.log(error);
+      }
     }
   });
 
   socket.on("tap", async ({ index, roomId }) => {
     try {
       const room = rooms.find((room) => room.id === roomId);
-
-      let choice = room.turn.playerType; // x or o
+      let choice = room.turn.playerType;
       if (room.turnIndex == 0) {
         room.turn = room.players[1];
         room.turnIndex = 1;
@@ -83,7 +89,8 @@ io.on("connection", (socket) => {
         room.turn = room.players[0];
         room.turnIndex = 0;
       }
-      room = await room.save();
+      console.log("tapped");
+      console.log(room)
       io.to(roomId).emit("tapped", {
         index,
         choice,
