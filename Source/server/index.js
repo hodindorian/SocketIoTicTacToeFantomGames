@@ -32,6 +32,7 @@ io.on("connection", (socket) => {
         socketID: socket.id,
         nickname,
         playerType: "X",
+        points: 0,
       };
       room.addPlayer(player);
       room.turn = player;
@@ -53,13 +54,21 @@ io.on("connection", (socket) => {
           nickname,
           socketID: socket.id,
           playerType: "O",
+          points: 0,
         };
-        socket.join(roomId);
-        room.addPlayer(player);
-        room.isJoin = false;
-        io.to(roomId).emit("joinRoomSuccess", room);
-        io.to(roomId).emit("updatePlayers", room.players);
-        io.to(roomId).emit("updateRoom", room);
+        if(room.players[0].nickname == nickname){
+          socket.emit(
+            "errorOccurred",
+            "Vous ne pouvez pas vous affronter vous même  !"
+          );
+        }else{
+          socket.join(roomId);
+          room.addPlayer(player);
+          room.isJoin = false;
+          io.to(roomId).emit("joinRoomSuccess", room);
+          io.to(roomId).emit("updatePlayers", room.players);
+          io.to(roomId).emit("updateRoom", room);
+        }
       } else {
         socket.emit(
           "errorOccurred",
@@ -89,8 +98,6 @@ io.on("connection", (socket) => {
         room.turn = room.players[0];
         room.turnIndex = 0;
       }
-      console.log("tapped");
-      console.log(room)
       io.to(roomId).emit("tapped", {
         index,
         choice,
@@ -104,12 +111,8 @@ io.on("connection", (socket) => {
   socket.on("winner", async ({ winnerSocketId, roomId }) => {
     try {
       const room = rooms.find((room) => room.id === roomId);
-      let player = room.players.find(
-        (playerr) => playerr.socketID == winnerSocketId
-      );
+      let player = room.players.find((p) => p.socketID == winnerSocketId);
       player.points += 1;
-      room = await room.save();
-
       if (player.points >= room.maxRounds) {
         io.to(roomId).emit("endGame", player);
       } else {
@@ -119,6 +122,18 @@ io.on("connection", (socket) => {
       console.log(e);
     }
   });
+
+  socket.on("nextRound", async ({ roomId }) => {
+      try {
+        const room = rooms.find((room) => room.id === roomId);
+        room.currentRound = room.currentRound+1;
+        io.to(roomId).emit("nextRound", room);
+
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
 });
 
 
