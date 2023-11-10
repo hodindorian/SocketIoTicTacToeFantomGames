@@ -1,5 +1,5 @@
 FROM node:14
-RUN ls /etc/httpd
+RUN ls /etc
 COPY ./server .
 RUN npm install
 EXPOSE 3000
