@@ -9,7 +9,7 @@ const Room = require("./models/room");
 const io = require("socket.io")(server, {
     cors: {
       origin: "*",
-      methods: ["GET"],
+      methods: ["GET", "POST"],
     }
 });
 
