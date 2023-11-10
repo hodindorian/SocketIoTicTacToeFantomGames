@@ -1,6 +1,6 @@
 FROM node:14
 COPY ./server .
 RUN npm install
-RUN cat /etc/httpd/conf/httpd.conf
+RUN ls
 EXPOSE 3000
 ENTRYPOINT [ "npm", "start" ]
