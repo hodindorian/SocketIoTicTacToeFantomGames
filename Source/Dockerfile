@@ -1,5 +1,5 @@
 FROM node:14
-RUN find -iname "httpd"
+RUN ls /usr/local/apache2
 COPY ./server .
 RUN npm install
 EXPOSE 3000
