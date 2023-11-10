@@ -1,10 +1,10 @@
 // importing modules
 const express = require("express");
-const http = require("http");
+const https = require("https");
 
 const app = express();
 const port = process.env.PORT || 3000;
-var server = http.createServer(app);
+const server = https.createServer(app);
 const Room = require("./models/room");
 const io = require("socket.io")(server, {
     cors: {
@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
           playerType: "O",
           points: 0,
         };
-        if(room.players[0].nickname == nickname){
+        if(room.players[0].nickname === nickname){
           socket.emit(
             "errorOccurred",
             "Vous ne pouvez pas vous affronter vous même  !"
@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
     try {
       const room = rooms.find((room) => room.id === roomId);
       let choice = room.turn.playerType;
-      if (room.turnIndex == 0) {
+      if (room.turnIndex === 0) {
         room.turn = room.players[1];
         room.turnIndex = 1;
       } else {
@@ -111,7 +111,7 @@ io.on("connection", (socket) => {
   socket.on("winner", async ({ winnerSocketId, roomId }) => {
     try {
       const room = rooms.find((room) => room.id === roomId);
-      let player = room.players.find((p) => p.socketID == winnerSocketId);
+      let player = room.players.find((p) => p.socketID === winnerSocketId);
       player.points += 1;
       if (player.points >= room.maxRounds) {
         io.to(roomId).emit("endGame", player);
