@@ -27,29 +27,3 @@ steps:
       - if [ -z "$(curl -s http://localhost:3000 | grep '<pre>Cannot GET /</pre>')" ];then exit 1;fi
 
     depends_on: [ build ]
-
-  # docker image build
-  - name: set_server
-    image: plugins/docker
-    settings:
-      dockerfile: ./Source/Dockerfile
-      context: ./Source
-      registry: hub.codefirst.iut.uca.fr
-      repo: hub.codefirst.iut.uca.fr/dorian.hodin/socketioservergames
-      username:
-        from_secret: SECRET_USERNAME
-      password:
-        from_secret: SECRET_PASSWD
-    depends_on: [ server-test ]
-
-
-  # container deployment
-  - name: deploy_api
-    image: hub.codefirst.iut.uca.fr/thomas.bellembois/codefirst-dockerproxy-clientdrone:latest
-    environment:
-      IMAGENAME: hub.codefirst.iut.uca.fr/dorian.hodin/socketioservergames:latest
-      CONTAINERNAME: deploy_server
-      COMMAND: create
-      OVERWRITE: true
-      ADMINS: dorianhodin,corentinrichard,jeremybesson,joanpierron
-    depends_on: [ set_server ]
