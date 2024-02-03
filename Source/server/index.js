@@ -47,6 +47,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("joinRoom", async ({ nickname, roomId }) => {
+    console.log("JoinRoom");
+
     try {
       const room = rooms.find((room) => room.id === roomId.toString());
       if (room.isJoin) {
@@ -56,19 +58,21 @@ io.on("connection", (socket) => {
           playerType: "O",
           points: 0,
         };
+        /*
         if(room.players[0].nickname === nickname){
           socket.emit(
             "errorOccurred",
             "Vous ne pouvez pas vous affronter vous même  !"
           );
         }else{
+          */
           socket.join(roomId);
           room.addPlayer(player);
           room.isJoin = false;
           io.to(roomId).emit("joinRoomSuccess", room);
           io.to(roomId).emit("updatePlayers", room.players);
           io.to(roomId).emit("updateRoom", room);
-        }
+        //}
       } else {
         socket.emit(
           "errorOccurred",
@@ -88,6 +92,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("tap", async ({ index, roomId }) => {
+    console.log("tap");
+
     try {
       const room = rooms.find((room) => room.id === roomId);
       let choice = room.turn.playerType;
@@ -109,11 +115,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("winner", async ({ winnerSocketId, roomId }) => {
+    console.log("winner");
+
     try {
       const room = rooms.find((room) => room.id === roomId);
       let player = room.players.find((p) => p.socketID === winnerSocketId);
       player.points += 1;
-      if (player.points >= room.maxRounds) {
+      if (player.points >= 6) {
+        console.log("endgame");
         io.to(roomId).emit("endGame", player);
       } else {
         io.to(roomId).emit("pointIncrease", player);
