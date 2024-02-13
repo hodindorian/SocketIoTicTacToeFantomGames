@@ -10,8 +10,6 @@ const uid = function () {
   return result;
 }
 
-
-console.log(uid())
 class Room {
   constructor() {
     this.id = uid();
