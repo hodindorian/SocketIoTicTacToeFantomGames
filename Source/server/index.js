@@ -133,7 +133,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("nextRound", async ({ roomId }) => {
-      try {
+    console.log("next round");
+
+    try {
         const room = rooms.find((room) => room.id === roomId);
         room.currentRound = room.currentRound+1;
         io.to(roomId).emit("nextRound", room);
@@ -142,6 +144,29 @@ io.on("connection", (socket) => {
         console.log(e);
       }
     });
+
+
+  socket.on("clearBoard", async ({ roomId }) => {
+    console.log("clearBoard");
+
+    try {
+      const room = rooms.find((room) => room.id === roomId);
+      io.to(roomId).emit("clearBoard", room);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("clearGame", async ({ roomId }) => {
+    console.log("clearGame");
+
+    try {
+      const room = rooms.find((room) => room.id === roomId);
+      io.to(roomId).emit("clearGame", room);
+    } catch (e) {
+      console.log(e);
+    }
+  });
 
 });
 
