@@ -155,6 +155,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("clearGame", async ({ roomId }) => {
+    console.log("clearGame");
+
+    try {
+      const room = rooms.find((room) => room.id === roomId);
+      io.to(roomId).emit("clearGame", room);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
 });
 
 
