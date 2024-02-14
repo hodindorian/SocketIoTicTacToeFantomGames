@@ -166,6 +166,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("leaveGame", async ({ roomId }) => {
+    console.log("leaveGame");
+
+    try {
+      const room = rooms.find((room) => room.id === roomId);
+      io.to(roomId).emit("leaveGame", room);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
 });
 
 
