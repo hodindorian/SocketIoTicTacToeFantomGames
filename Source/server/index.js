@@ -120,8 +120,7 @@ io.on("connection", (socket) => {
       let player = room.players.find((p) => p.socketID === winnerSocketId);
       player.points += 1;
       if (player.points >= 6) {
-        console.log("endgame");
-        io.to(roomId).emit("endGame", player);
+        console.log("endGame");
       } else {
         io.to(roomId).emit("pointIncrease", player);
       }
@@ -172,6 +171,17 @@ io.on("connection", (socket) => {
     try {
       const room = rooms.find((room) => room.id === roomId);
       io.to(roomId).emit("leaveGame", room);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("endGame", async ({ roomId }) => {
+    console.log("endGame");
+
+    try {
+      const room = rooms.find((room) => room.id === roomId);
+      io.to(roomId).emit("endGame", room);
     } catch (e) {
       console.log(e);
     }
